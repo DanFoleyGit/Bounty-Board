@@ -1,7 +1,6 @@
 const val HERO_NAME = "Madrigal"
 var playerLevel = 0
 
-
 fun main() {
     println("$HERO_NAME starts her adventure") // quick string  concatenation (interpolation)
     println("what level is $HERO_NAME?")
@@ -19,17 +18,24 @@ fun main() {
     println("$HERO_NAME from the quest.")
     playerLevel += 1
     println(playerLevel)
+    readBountyBoard()
 }
 
 private fun readBountyBoard(){
 //    println("$HERO_NAME approaches the bounty board. It reads:")
 //    println("\t\"${obtainQuest(playerLevel)}\"") // string formatting the returned string from obtainQuest()
-    println(
-        """
+    val quest: String? = obtainQuest(playerLevel)
+    // safe operator - if the value is null, it will skip over the function after ?.
+    val censoredQuest: String? = quest?.replace("Nogartes", "XXXXXXXX")
+
+    if (censoredQuest != null) {
+        println(
+            """
             |$HERO_NAME approaches the bounty board. It Reads:
-            |   "${obtainQuest(playerLevel).replace("Nogartes","xxxxxxxx")}"
+            |   "$censoredQuest"
         """.trimMargin()
-    )
+        )
+    }
 }
 
 private fun obtainQuest(
@@ -39,8 +45,8 @@ private fun obtainQuest(
     hasBefriendedBarbarians: Boolean = true
 
 
-    // single expression function. ie returns the result of the when statement using the = instead of return keyword
-): String = when (playerLevel) {
+    // single expression function. ie returns the result of the "when" statement using the = instead of return keyword
+): String? = when (playerLevel) {
     1 -> "meet mr bubbles in the land of soft things"
     in 2..5 -> { // range 2 to 5 inclusive
         // Check if diplomacy is an option
@@ -56,5 +62,5 @@ private fun obtainQuest(
     6 -> "Locate the enchanted sword"
     7 -> "Recover the long lost artifact."
     8 -> "Defeat Nogartes"
-    else -> "There are no quests right now."
+    else -> null
 }
